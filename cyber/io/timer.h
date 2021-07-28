@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2018 The Apollo Authors. All Rights Reserved.
+ * Copyright 2021 The Apollo Authors. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,46 +14,22 @@
  * limitations under the License.
  *****************************************************************************/
 
-#ifndef CYBER_IO_POLL_HANDLER_H_
-#define CYBER_IO_POLL_HANDLER_H_
+#ifndef CYBER_IO_TIMER_H_
+#define CYBER_IO_TIMER_H_
 
-#include <atomic>
-#include <functional>
-#include <memory>
-
-#include "cyber/croutine/croutine.h"
-#include "cyber/io/poll_data.h"
+#include <chrono>
 
 namespace apollo {
 namespace cyber {
 namespace io {
 
-class PollHandler {
+class Timer final {
  public:
-  explicit PollHandler(int fd);
-  virtual ~PollHandler() = default;
-
-  bool Block(int timeout_ms, bool is_read);
-  bool Unblock(const std::function<void()>& callback);
-
-  int fd() const { return fd_; }
-  void set_fd(int fd) { fd_ = fd; }
-
- private:
-  bool Check(int timeout_ms);
-  void Fill(int timeout_ms, bool is_read);
-  void ResponseCallback(const PollResponse& rsp);
-
-  int fd_;
-  PollRequest request_;
-  PollResponse response_;
-  std::atomic<bool> is_read_;
-  std::atomic<bool> is_blocking_;
-  croutine::CRoutine* routine_;
+  static void WaitFor(const std::chrono::microseconds& duration);
 };
 
 }  // namespace io
 }  // namespace cyber
 }  // namespace apollo
 
-#endif  // CYBER_IO_POLL_HANDLER_H_
+#endif  // CYBER_IO_TIMER_H_
