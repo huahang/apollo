@@ -18,6 +18,7 @@
 #define CYBER_IO_POLL_HANDLER_H_
 
 #include <atomic>
+#include <functional>
 #include <memory>
 
 #include "cyber/croutine/croutine.h"
